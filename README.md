@@ -20,13 +20,13 @@ export JULES_API_KEY=your_api_key
 npm start
 ```
 
-`npx` 経由でパッケージ（`@el-el-san/jules-mcp`）を実行することもできます。ローカルにクローンしていない環境でも、次のように環境変数を渡して起動できます。
+You can also run the published package (`@el-el-san/jules-mcp`) via `npx`. This is convenient when you have not cloned the repository locally.
 
 ```bash
 JULES_API_KEY=your_api_key npx @el-el-san/jules-mcp
 ```
 
-The process listens on stdio as required by the MCP specification. Claude Code や他の MCP クライアントでは、以下のような `.mcp.json` エントリを追加すると便利です（`/absolute/path/to/jules-mcp` は自身のパスに置き換えてください）。
+The process listens on stdio as required by the MCP specification. In Claude Code or any other MCP-compatible client, add an entry like the following to `.mcp.json` (replace `/absolute/path/to/jules-mcp` with your own path):
 
 ```json
 {
@@ -49,9 +49,9 @@ The process listens on stdio as required by the MCP specification. Claude Code �
 }
 ```
 
-`--prefix` を指定することで、MCP クライアントがどのディレクトリから起動されても npm が正しい `package.json` を解決できます。同様に `cwd` を合わせておくと、相対パスを扱う追加ツールを実装した際にも安全です。
+The `--prefix` flag ensures npm resolves the correct `package.json` no matter where the MCP client starts the process. Matching the `cwd` keeps any additional tools that rely on relative paths aligned with the repository root.
 
-ローカルにクローンせずに `npx` だけで利用する場合は、以下のような構成にすることで常に最新の公開バージョンを取得できます。
+To always run the latest published version without cloning the repository, configure your MCP client to invoke `npx` instead:
 
 ```json
 {
@@ -68,19 +68,19 @@ The process listens on stdio as required by the MCP specification. Claude Code �
 }
 ```
 
-## Claude Code での使い方
-1. Claude Code の設定メニューから **Model Context Protocol** セクションを開き、このリポジトリを指すように `.mcp.json` を読み込ませます（本リポジトリ直下にあるサンプル設定ファイルをそのまま利用可能）。
-2. Claude Code が接続に成功すると、チャット入力欄で `/tools` または「ツール」パネルから `jules` サーバーが表示されます。初回は `/tools refresh` を実行すると一覧が更新されます。
-3. ツールは以下の順に利用するとわかりやすいです。
-   - `list-sources` で接続されている GitHub リポジトリなどのソース一覧を取得。
-   - `create-session` で対象ソースとプロンプトを指定してセッションを作成。
-   - `list-sessions` で既存セッションの確認や ID の取得。
-   - `approve-session-plan` で承認待ちプランの承認。
-   - `list-activities` で進捗のアクティビティを確認。
-   - `send-session-message` でセッションに追加メッセージを送信。
-4. ツール呼び出し時は Claude が JSON 入力フォームを提示するので、必要な項目（例: `sessionId`, `prompt` など）を入力して実行してください。
+## Using with Claude Code
+1. In Claude Code, open **Settings → Model Context Protocol** and load the `.mcp.json` that points to this repository (a sample is included at the repository root).
+2. Once the connection succeeds, the `jules` server appears under `/tools` or in the **Tools** panel. Run `/tools refresh` if you do not see it immediately.
+3. The typical tool flow is:
+   - `list-sources` to list GitHub repositories or other sources linked to your Jules account.
+   - `create-session` to start a session with a source and a prompt.
+   - `list-sessions` to enumerate existing sessions and retrieve their IDs.
+   - `approve-session-plan` to approve pending plans for sessions that require it.
+   - `list-activities` to monitor progress within a session.
+   - `send-session-message` to send additional user messages.
+4. When you invoke a tool, Claude presents a JSON form. Fill in the required fields such as `sessionId` or `prompt` before submitting.
 
-各ツールの結果は JSON テキストとして返されます。Jules API からのエラーもそのまま返すので、失敗した場合はエラーメッセージを参考にしてください。
+Each tool returns JSON text. Errors from the Jules API are forwarded verbatim, so check the error message for troubleshooting details.
 
 ## Documentation resource
 The server also exposes a static resource `jules-doc://spec` that returns a condensed Markdown reference of the Jules API (see `docs/jules-api.md`). You can request this resource from your MCP client to prime the model with API context.
