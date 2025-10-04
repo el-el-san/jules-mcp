@@ -1,6 +1,6 @@
 {
   "name": "@el-el-san/jules-mcp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Model Context Protocol server for the Jules API",
   "main": "src/index.js",
   "scripts": {
