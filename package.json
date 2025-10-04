@@ -1,0 +1,25 @@
+{
+  "name": "jules-mcp",
+  "version": "1.0.0",
+  "description": "Model Context Protocol server for the Jules API",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/el-el-san/jules-mcp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/el-el-san/jules-mcp/issues"
+  },
+  "homepage": "https://github.com/el-el-san/jules-mcp#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.19.1",
+    "zod": "^3.25.76"
+  }
+}
