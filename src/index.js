@@ -76,17 +76,15 @@ server.registerTool(
   {
     title: 'List Sources',
     description: 'List Jules sources available to the authenticated user.',
-    inputSchema: z
-      .object({
-        pageSize: z
-          .number({ invalid_type_error: 'pageSize must be a number' })
-          .int()
-          .positive()
-          .max(1000)
-          .optional(),
-        pageToken: z.string().min(1).optional()
-      })
-      .strict()
+    inputSchema: {
+      pageSize: z
+        .number({ invalid_type_error: 'pageSize must be a number' })
+        .int()
+        .positive()
+        .max(1000)
+        .optional(),
+      pageToken: z.string().min(1).optional()
+    }
   },
   async ({ pageSize, pageToken }) => {
     const result = await julesFetch('sources', {
@@ -104,20 +102,19 @@ server.registerTool(
   {
     title: 'Create Session',
     description: 'Create a Jules session for a given source and prompt.',
-    inputSchema: z
-      .object({
-        prompt: z.string().min(1, 'prompt is required'),
-        source: z.string().min(1, 'source is required'),
-        title: z.string().min(1).optional(),
-        requirePlanApproval: z.boolean().optional(),
-        githubRepoContext: z
-          .object({
-            startingBranch: z.string().min(1).optional(),
-            featureBranch: z.string().min(1).optional()
-          })
-          .optional()
-      })
-      .strict()
+    inputSchema: {
+      prompt: z.string().min(1, 'prompt is required'),
+      source: z.string().min(1, 'source is required'),
+      title: z.string().min(1).optional(),
+      requirePlanApproval: z.boolean().optional(),
+      githubRepoContext: z
+        .object({
+          startingBranch: z.string().min(1).optional(),
+          featureBranch: z.string().min(1).optional()
+        })
+        .strict()
+        .optional()
+    }
   },
   async ({ prompt, source, title, requirePlanApproval, githubRepoContext }) => {
     const sourceContext = { source };
@@ -157,17 +154,15 @@ server.registerTool(
   {
     title: 'List Sessions',
     description: 'List Jules sessions.',
-    inputSchema: z
-      .object({
-        pageSize: z
-          .number({ invalid_type_error: 'pageSize must be a number' })
-          .int()
-          .positive()
-          .max(1000)
-          .optional(),
-        pageToken: z.string().min(1).optional()
-      })
-      .strict()
+    inputSchema: {
+      pageSize: z
+        .number({ invalid_type_error: 'pageSize must be a number' })
+        .int()
+        .positive()
+        .max(1000)
+        .optional(),
+      pageToken: z.string().min(1).optional()
+    }
   },
   async ({ pageSize, pageToken }) => {
     const result = await julesFetch('sessions', {
@@ -185,11 +180,9 @@ server.registerTool(
   {
     title: 'Approve Session Plan',
     description: 'Approve the latest plan for a Jules session that requires approval.',
-    inputSchema: z
-      .object({
-        sessionId: z.string().min(1, 'sessionId is required')
-      })
-      .strict()
+    inputSchema: {
+      sessionId: z.string().min(1, 'sessionId is required')
+    }
   },
   async ({ sessionId }) => {
     const path = `sessions/${encodeURIComponent(sessionId)}:approvePlan`;
@@ -203,18 +196,16 @@ server.registerTool(
   {
     title: 'List Session Activities',
     description: 'List activities that have occurred in a Jules session.',
-    inputSchema: z
-      .object({
-        sessionId: z.string().min(1, 'sessionId is required'),
-        pageSize: z
-          .number({ invalid_type_error: 'pageSize must be a number' })
-          .int()
-          .positive()
-          .max(100)
-          .optional(),
-        pageToken: z.string().min(1).optional()
-      })
-      .strict()
+    inputSchema: {
+      sessionId: z.string().min(1, 'sessionId is required'),
+      pageSize: z
+        .number({ invalid_type_error: 'pageSize must be a number' })
+        .int()
+        .positive()
+        .max(100)
+        .optional(),
+      pageToken: z.string().min(1).optional()
+    }
   },
   async ({ sessionId, pageSize, pageToken }) => {
     const path = `sessions/${encodeURIComponent(sessionId)}/activities`;
@@ -233,12 +224,10 @@ server.registerTool(
   {
     title: 'Send Session Message',
     description: 'Send a user message to a Jules session.',
-    inputSchema: z
-      .object({
-        sessionId: z.string().min(1, 'sessionId is required'),
-        prompt: z.string().min(1, 'prompt is required')
-      })
-      .strict()
+    inputSchema: {
+      sessionId: z.string().min(1, 'sessionId is required'),
+      prompt: z.string().min(1, 'prompt is required')
+    }
   },
   async ({ sessionId, prompt }) => {
     const path = `sessions/${encodeURIComponent(sessionId)}:sendMessage`;

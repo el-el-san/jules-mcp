@@ -20,18 +20,30 @@ export JULES_API_KEY=your_api_key
 npm start
 ```
 
-The process listens on stdio as required by the MCP specification. Configure your MCP client (for example Claude Desktop) with a command similar to:
+The process listens on stdio as required by the MCP specification. Claude Code や他の MCP クライアントでは、以下のような `.mcp.json` エントリを追加すると便利です（`/absolute/path/to/jules-mcp` は自身のパスに置き換えてください）。
 
 ```json
 {
-  "command": "npm",
-  "args": ["start"],
-  "env": {
-    "JULES_API_KEY": "your_api_key"
-  },
-  "cwd": "/path/to/jules-mcp"
+  "mcpServers": {
+    "jules": {
+      "command": "npm",
+      "args": [
+        "--prefix",
+        "/absolute/path/to/jules-mcp",
+        "run",
+        "start"
+      ],
+      "env": {
+        "JULES_API_KEY": "${JULES_API_KEY}",
+        "JULES_API_URL": "${JULES_API_URL:-https://jules.googleapis.com/v1alpha/}"
+      },
+      "cwd": "/absolute/path/to/jules-mcp"
+    }
+  }
 }
 ```
+
+`--prefix` を指定することで、MCP クライアントがどのディレクトリから起動されても npm が正しい `package.json` を解決できます。同様に `cwd` を合わせておくと、相対パスを扱う追加ツールを実装した際にも安全です。
 
 ## Claude Code での使い方
 1. Claude Code の設定メニューから **Model Context Protocol** セクションを開き、このリポジトリを指すように `.mcp.json` を読み込ませます（本リポジトリ直下にあるサンプル設定ファイルをそのまま利用可能）。
