@@ -23,6 +23,35 @@ function getApiKey() {
   return key;
 }
 
+function normalizeSourceName(source) {
+  const trimmed = source.trim();
+  if (!trimmed) {
+    throw new Error('source is required');
+  }
+
+  if (trimmed.startsWith('sources/')) {
+    return trimmed;
+  }
+
+  // Allow passing repo identifiers such as "github/owner/repo" or "owner/repo"
+  if (trimmed.startsWith('github/')) {
+    return `sources/${trimmed}`;
+  }
+
+  if (/^[^/]+\/[^/]+$/.test(trimmed)) {
+    return `sources/github/${trimmed}`;
+  }
+
+  if (trimmed.startsWith('https://github.com/')) {
+    const repo = trimmed.replace('https://github.com/', '').replace(/\.git$/, '');
+    if (/^[^/]+\/[^/]+$/.test(repo)) {
+      return `sources/github/${repo}`;
+    }
+  }
+
+  return `sources/${trimmed}`;
+}
+
 async function julesFetch(path, { method = 'GET', query, body } = {}) {
   const url = new URL(path.replace(/^\//, ''), baseUrl);
   if (query) {
@@ -117,7 +146,7 @@ server.registerTool(
     }
   },
   async ({ prompt, source, title, requirePlanApproval, githubRepoContext }) => {
-    const sourceContext = { source };
+    const sourceContext = { source: normalizeSourceName(source) };
     if (githubRepoContext) {
       const compactRepoContext = Object.fromEntries(
         Object.entries(githubRepoContext).filter(([, value]) => value !== undefined && value !== null && value !== '')
