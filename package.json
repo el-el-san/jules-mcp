@@ -1,10 +1,13 @@
 {
-  "name": "jules-mcp",
+  "name": "@el-el-san/jules-mcp",
   "version": "1.0.0",
   "description": "Model Context Protocol server for the Jules API",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js"
+  },
+  "bin": {
+    "jules-mcp": "bin/jules-mcp.js"
   },
   "repository": {
     "type": "git",
